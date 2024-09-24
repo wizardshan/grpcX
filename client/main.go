@@ -15,10 +15,11 @@ func main() {
 	client := serverconnect.NewGreeterClient(
 		http.DefaultClient,
 		"http://localhost:8080/",
+		connect.WithGRPC(),
 	)
 	req := connect.NewRequest(&request.UserGetRequest{
 		ID: &domain.ID{
-			Title: "11111",
+			Title: "",
 		},
 	})
 	req.Header().Set("Some-Header", "hello from connect")
@@ -28,4 +29,5 @@ func main() {
 	}
 	log.Println(res.Msg)
 	log.Println(res.Header().Get("Some-Other-Header"))
+
 }
