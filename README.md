@@ -20,7 +20,9 @@ buf generate
 github.com/golang/protobuf
 废弃  同时生成pb和gRPC相关代码
 
-google.golang.org/protobuf
+google.golang.org/protobuf 
 推荐使用
 只生成pb序列化相关的文件
 生成gRPC相关代码需要使用grpc-go插件protoc-gen-go-grpc
+
+curl --header "Content-Type: application/json" --data '{"ID": {"Title":"22222"}}' http://localhost:8080/server.Greeter/SayHello

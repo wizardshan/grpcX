@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+option go_package = "github.com/wizardshan/grpcX/server";
+
+package server;
+
+import "request/user.proto";
+
+service Greeter {
+  rpc SayHello (request.UserGetRequest) returns (request.UserGetResponse) {}
+}
