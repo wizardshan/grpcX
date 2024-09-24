@@ -1,5 +1,6 @@
 version: v2
 plugins:
+
   - remote: buf.build/protocolbuffers/go
     out: ./
     # You almost always want to set this option with protoc-gen-go

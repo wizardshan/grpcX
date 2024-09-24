@@ -2,10 +2,8 @@ package main
 
 import (
 	"connectrpc.com/connect"
+	"connectrpc.com/validate"
 	"context"
-	"flag"
-	"fmt"
-	"github.com/bufbuild/protovalidate-go"
 	"github.com/wizardshan/grpcX/domain"
 	"github.com/wizardshan/grpcX/request"
 	"github.com/wizardshan/grpcX/server/serverconnect"
@@ -13,10 +11,6 @@ import (
 	"golang.org/x/net/http2/h2c"
 	"log"
 	"net/http"
-)
-
-var (
-	port = flag.Int("port", 50051, "The server port")
 )
 
 // server is used to implement helloworld.GreeterServer.
@@ -35,31 +29,34 @@ func (s *srv) SayHello(ctx context.Context, req *connect.Request[request.UserGet
 	return res, nil
 }
 
-type Validator interface {
-	Validate() error
-}
-
 func main() {
 
-	msg := &domain.ID{
-		Title: "",
-	}
+	//msg := &domain.ID{
+	//	Title: "",
+	//}
+	//
+	//v, err := protovalidate.New()
+	//if err != nil {
+	//	fmt.Println("failed to initialize validator:", err)
+	//}
+	//
+	//if err = v.Validate(msg); err != nil {
+	//	fmt.Println("validation failed:", err)
+	//} else {
+	//	fmt.Println("validation succeeded")
+	//}
 
-	v, err := protovalidate.New()
+	interceptor, err := validate.NewInterceptor()
 	if err != nil {
-		fmt.Println("failed to initialize validator:", err)
+		log.Fatal(err)
 	}
 
-	if err = v.Validate(msg); err != nil {
-		fmt.Println("validation failed:", err)
-	} else {
-		fmt.Println("validation succeeded")
-	}
+	interceptors := connect.WithInterceptors(interceptor)
 
 	mux := http.NewServeMux()
 	// The generated constructors return a path and a plain net/http
 	// handler.
-	mux.Handle(serverconnect.NewGreeterHandler(&srv{}))
+	mux.Handle(serverconnect.NewGreeterHandler(&srv{}, interceptors))
 	err = http.ListenAndServe(
 		"localhost:8080",
 		// For gRPC clients, it's convenient to support HTTP/2 without TLS. You can
