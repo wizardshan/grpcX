@@ -1,0 +1,15 @@
+// demo/proto/book/book.proto
+
+syntax = "proto3";
+
+// 声明protobuf中的包名
+package domain;
+
+// 声明生成的Go代码的导入路径
+option go_package = "github.com/wizardshan/grpcX/request";
+
+import "domain/id.proto";
+
+message UserGetRequest {
+  domain.ID ID = 1;
+}
